@@ -1,0 +1,4 @@
+#!/bin/bash
+# AI Battery launcher
+INSTALL_DIR="$HOME/.aibattery"
+exec "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py"
