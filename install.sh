@@ -17,9 +17,10 @@ mkdir -p "$INSTALL_DIR"
 if [ -f "$(dirname "$0")/tray.py" ]; then
     echo "📦 Copying files..."
     cp -r "$(dirname "$0")"/* "$INSTALL_DIR/"
+    # Remove copied node_modules (has broken symlinks), will reinstall
+    rm -rf "$INSTALL_DIR/node_modules"
 else
     echo "📦 Downloading..."
-    # Replace with your actual repo URL
     git clone https://github.com/dlouks/aibattery.git "$INSTALL_DIR"
 fi
 
