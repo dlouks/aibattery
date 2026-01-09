@@ -2,8 +2,6 @@
 
 A macOS menu bar app and CLI tool that shows your AI API usage like a battery indicator.
 
-![Menu Bar](docs/menubar.png)
-
 ## Quick Install
 
 ```bash
@@ -39,12 +37,16 @@ claude  # Follow prompts to authenticate
 ## What You Get
 
 ### Menu Bar Icon
+![Menu Bar](docs/menubar.png)
+
 - Nested arc indicator in your menu bar
 - Outer arc = weekly usage, Inner arc = session usage
 - Click to see detailed breakdown with battery bars
 - Auto-refreshes every 10 minutes
 
 ### CLI Tool
+![CLI](docs/cli.png)
+
 ```bash
 aibattery           # Interactive view with auto-refresh
 aibattery --help    # Show options
