@@ -55,6 +55,10 @@ sed "s|INSTALL_PATH|$INSTALL_DIR|g" "$INSTALL_DIR/com.aibattery.plist" > "$LAUNC
 launchctl unload "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
+# Fetch initial usage data (before starting tray app)
+echo "📊 Fetching initial usage data..."
+python3 "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
+
 # Start the service
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
 
@@ -67,7 +71,7 @@ echo ""
 echo "   Menu bar icon should appear now."
 echo "   It will auto-start on login."
 echo ""
-echo "   Commands:"
+echo "   CLI commands (may need new terminal):"
 echo "   - aibattery          Run CLI"
 echo "   - aibattery --help   Show options"
 echo ""
