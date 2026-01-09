@@ -71,12 +71,10 @@ launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 # Explicitly start the service now (launchctl load only schedules for login)
 launchctl start com.aibattery 2>/dev/null || true
 
-# Fallback: if still not running, open the app directly
+# Start the app using osascript (survives pipe context)
 sleep 1
 if ! pgrep -f "tray.py" > /dev/null; then
-    # Use --background to ensure it starts even from pipe context
-    open --background "$INSTALL_DIR/AIBattery.app" 2>/dev/null &
-    sleep 2
+    osascript -e "do shell script \"open '$INSTALL_DIR/AIBattery.app'\"" &
 fi
 
 echo ""
