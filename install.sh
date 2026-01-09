@@ -58,8 +58,15 @@ sed "s|INSTALL_PATH|$INSTALL_DIR|g" "$INSTALL_DIR/com.aibattery.plist" > "$LAUNC
 launchctl unload "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
-# Fetch initial usage data (before starting tray app)
-echo "📊 Fetching initial usage data..."
+# First-time setup: run claude /usage interactively to establish trust
+echo ""
+echo "📊 First-time setup: You may need to accept a trust prompt..."
+echo "   Press Enter when prompted, then Esc to close the usage screen."
+echo ""
+cd "$HOME" && claude /usage || true
+echo ""
+
+# Now fetch the data via script
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
 # Start the service

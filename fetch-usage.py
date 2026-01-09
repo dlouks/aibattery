@@ -106,12 +106,13 @@ def parse_usage_output(output):
 def fetch_usage():
     """Run claude /usage and capture the output."""
     try:
-        # Spawn claude /usage with proper terminal dimensions
+        # Spawn claude /usage from home directory (to avoid trust prompts)
         child = pexpect.spawn(
             'claude /usage',
             encoding='utf-8',
             timeout=30,
-            dimensions=(40, 120)  # rows, cols
+            dimensions=(40, 120),  # rows, cols
+            cwd=os.path.expanduser('~')
         )
 
         # Give it time to render
