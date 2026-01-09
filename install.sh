@@ -64,8 +64,14 @@ chmod +x "$INSTALL_DIR/AIBattery.app/Contents/MacOS/AIBattery"
 # Fetch initial usage data
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
-# Start the service (RunAtLoad=true will start it immediately)
+# Start the service for login auto-start
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
+
+# Start immediately (launchctl can be unreliable)
+sleep 1
+if ! pgrep -f "tray.py" > /dev/null; then
+    "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" &
+fi
 
 echo ""
 echo "✅ AI Battery installed!"
