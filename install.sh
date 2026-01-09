@@ -81,8 +81,5 @@ fi
 echo ""
 echo "✅ AI Battery installed!"
 echo ""
-echo "   Log out and back in to see the menu bar icon."
-echo "   It will auto-start on every login."
-echo ""
 echo "   CLI: aibattery"
 echo "   Uninstall: ~/.aibattery/uninstall.sh"
