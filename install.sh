@@ -66,13 +66,15 @@ chmod +x "$INSTALL_DIR/AIBattery.app/Contents/MacOS/AIBattery"
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
 # Start the service for login auto-start
-launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
+launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 
-# Start tray immediately if not already running
-sleep 1
+# Explicitly start the service now (launchctl load only schedules for login)
+launchctl start com.aibattery 2>/dev/null || true
+
+# Fallback: if still not running, open the app directly
+sleep 2
 if ! pgrep -f "tray.py" > /dev/null; then
-    # Use nohup with proper detachment for macOS
-    (nohup "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" </dev/null >/dev/null 2>&1 &)
+    open "$INSTALL_DIR/AIBattery.app" 2>/dev/null || true
 fi
 
 echo ""
