@@ -6,9 +6,7 @@
     <string>com.aibattery</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/open</string>
-        <string>-a</string>
-        <string>INSTALL_PATH/AIBattery.app</string>
+        <string>INSTALL_PATH/AIBattery.app/Contents/MacOS/AIBattery</string>
     </array>
     <key>WorkingDirectory</key>
     <string>INSTALL_PATH</string>
