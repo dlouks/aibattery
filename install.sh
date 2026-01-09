@@ -67,11 +67,10 @@ chmod +x "$INSTALL_DIR/AIBattery.app/Contents/MacOS/AIBattery"
 # Start the service for login auto-start
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
 
-# Start immediately (nohup ensures it survives script exit)
+# Start immediately (nohup + setsid ensures it survives script exit)
 sleep 1
 if ! pgrep -f "tray.py" > /dev/null; then
-    nohup "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" > /dev/null 2>&1 &
-    disown
+    setsid "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" </dev/null >/dev/null 2>&1 &
 fi
 
 echo ""
