@@ -8,12 +8,7 @@ A macOS menu bar app and CLI tool that shows your AI API usage like a battery in
 curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/main/install.sh | bash
 ```
 
-After install, start the app once with:
-```bash
-~/.aibattery/AIBattery.app/Contents/MacOS/AIBattery &
-```
-
-It will auto-start on future logins.
+Then log out and back in (or restart) to see the menu bar icon. It will auto-start on every login after that.
 
 This installs:
 - **Menu bar app** - Shows nested arcs (outer = weekly, inner = session usage)
