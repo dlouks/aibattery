@@ -61,11 +61,8 @@ pkill -f "aibattery.*tray.py" 2>/dev/null || true
 # Fetch initial usage data
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
-# Start the service
+# Start the service (RunAtLoad=true will start it immediately)
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
-
-# Also start the tray app directly (launchctl can be slow)
-"$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" &
 
 echo ""
 echo "✅ AI Battery installed!"
