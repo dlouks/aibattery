@@ -7,7 +7,7 @@ A macOS menu bar app and CLI tool that shows your AI API usage like a battery in
 ## Quick Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/main/install.sh | bash
 ```
 
 This installs:

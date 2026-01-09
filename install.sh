@@ -2,7 +2,7 @@
 set -e
 
 # AI Battery Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/master/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/main/install.sh | bash
 
 INSTALL_DIR="$HOME/.aibattery"
 PLIST_NAME="com.aibattery.plist"
