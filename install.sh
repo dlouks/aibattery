@@ -58,6 +58,9 @@ sed "s|INSTALL_PATH|$INSTALL_DIR|g" "$INSTALL_DIR/com.aibattery.plist" > "$LAUNC
 launchctl unload "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
+# Make app executable (git may not preserve permissions)
+chmod +x "$INSTALL_DIR/AIBattery.app/Contents/MacOS/AIBattery"
+
 # Fetch initial usage data
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
