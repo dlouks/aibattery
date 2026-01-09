@@ -1,6 +1,6 @@
 # AI Battery
 
-A macOS menu bar app and CLI tool that shows your Claude API usage like a battery indicator.
+A macOS menu bar app and CLI tool that shows your AI API usage like a battery indicator.
 
 ![Menu Bar](docs/menubar.png)
 
@@ -17,7 +17,7 @@ This installs:
 ## Prerequisites
 
 - **macOS** (uses native menu bar APIs)
-- **Python 3** with pip
+- **Python 3** (venv created automatically)
 - **Node.js** >= 18.x with npm
 - **Claude CLI** installed and logged in (`claude` command must work)
 
@@ -52,23 +52,24 @@ If you prefer to install manually:
 git clone https://github.com/dlouks/aibattery.git ~/.aibattery
 cd ~/.aibattery
 
-# Install Python dependencies
-pip3 install rumps pillow pexpect
+# Create Python venv and install dependencies
+python3 -m venv venv
+venv/bin/pip install rumps pillow pexpect
 
 # Install Node dependencies and build CLI
 npm install
 npm run build
 
 # Generate menu bar icons
-python3 generate_icons.py
+venv/bin/python generate_icons.py
 
 # Start the menu bar app
-python3 tray.py
+venv/bin/python tray.py
 ```
 
-To auto-start on login, copy the LaunchAgent:
+To auto-start on login, update and copy the LaunchAgent:
 ```bash
-cp com.aibattery.plist ~/Library/LaunchAgents/
+sed "s|INSTALL_PATH|$HOME/.aibattery|g" com.aibattery.plist > ~/Library/LaunchAgents/com.aibattery.plist
 launchctl load ~/Library/LaunchAgents/com.aibattery.plist
 ```
 

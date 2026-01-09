@@ -35,6 +35,7 @@ python3 -m venv "$INSTALL_DIR/venv"
 echo "📦 Installing Node dependencies..."
 npm install >/dev/null 2>&1
 npm run build >/dev/null 2>&1
+chmod +x "$INSTALL_DIR/dist/cli.js"
 
 # Link CLI globally
 echo "🔗 Linking CLI command..."
