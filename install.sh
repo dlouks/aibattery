@@ -34,6 +34,10 @@ echo "📦 Installing Node dependencies..."
 npm install >/dev/null 2>&1
 npm run build >/dev/null 2>&1
 
+# Link CLI globally
+echo "🔗 Linking CLI command..."
+npm link >/dev/null 2>&1 || true
+
 # Generate icons if not present
 if [ ! -f "$INSTALL_DIR/icons/battery_50.png" ]; then
     echo "🎨 Generating icons..."
@@ -53,6 +57,9 @@ pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
 # Start the service
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
+
+# Also start the tray app directly (launchctl can be slow)
+python3 "$INSTALL_DIR/tray.py" &
 
 echo ""
 echo "✅ Claude Battery installed!"
