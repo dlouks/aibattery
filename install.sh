@@ -72,9 +72,11 @@ launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 launchctl start com.aibattery 2>/dev/null || true
 
 # Fallback: if still not running, open the app directly
-sleep 2
+sleep 1
 if ! pgrep -f "tray.py" > /dev/null; then
-    open "$INSTALL_DIR/AIBattery.app" 2>/dev/null || true
+    # Use --background to ensure it starts even from pipe context
+    open --background "$INSTALL_DIR/AIBattery.app" 2>/dev/null &
+    sleep 2
 fi
 
 echo ""
