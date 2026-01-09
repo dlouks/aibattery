@@ -1,6 +1,10 @@
+import {readFileSync} from 'fs';
+import {join, dirname} from 'path';
+import {fileURLToPath} from 'url';
+
 export type UsageMetric = {
   percentUsed: number;
-  resetInfo?: string;
+  resetAt?: string; // ISO timestamp
 };
 
 export type UsageData = {
@@ -9,28 +13,43 @@ export type UsageData = {
   weeklySonnet?: UsageMetric;
 };
 
-// TODO: Replace with real usage data source
-// Options:
-// 1. Parse Claude CLI's local storage/config
-// 2. Call Anthropic usage API (requires API key)
-// 3. Read from a local config file that user updates
+type UsageDataFile = {
+  lastUpdated: string;
+  claude: {
+    session: UsageMetric;
+    weekly: UsageMetric;
+    weeklySonnet?: UsageMetric;
+  };
+};
+
+// Get the directory where this script is located
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Path to the usage data file (in project root)
+const USAGE_DATA_PATH = join(__dirname, '..', '..', 'usage-data.json');
 
 export async function fetchUsageData(): Promise<UsageData> {
-  // Mock data for now - matches the screenshot structure
-  // In production, this would fetch from Anthropic API or parse local Claude data
+  try {
+    const data = readFileSync(USAGE_DATA_PATH, 'utf-8');
+    const parsed: UsageDataFile = JSON.parse(data);
+    return parsed.claude;
+  } catch {
+    // Fallback to mock data if file doesn't exist
+    const now = new Date();
 
-  return {
-    session: {
-      percentUsed: 15,
-      resetInfo: '1am (America/Chicago)',
-    },
-    weekly: {
-      percentUsed: 11,
-      resetInfo: 'Jan 15, 6am (America/Chicago)',
-    },
-    weeklySonnet: {
-      percentUsed: 0,
-      resetInfo: 'Jan 15, 6am (America/Chicago)',
-    },
-  };
+    const sessionReset = new Date(now);
+    sessionReset.setDate(sessionReset.getDate() + 1);
+    sessionReset.setHours(1, 0, 0, 0);
+
+    const weeklyReset = new Date(now);
+    weeklyReset.setDate(weeklyReset.getDate() + 7);
+    weeklyReset.setHours(6, 0, 0, 0);
+
+    return {
+      session: {percentUsed: 50, resetAt: sessionReset.toISOString()},
+      weekly: {percentUsed: 50, resetAt: weeklyReset.toISOString()},
+      weeklySonnet: {percentUsed: 0, resetAt: weeklyReset.toISOString()},
+    };
+  }
 }

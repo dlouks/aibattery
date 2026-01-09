@@ -1,14 +1,30 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {Box, Text, useApp, useInput} from 'ink';
 import BatteryBar from './components/BatteryBar.js';
 import {type UsageData, fetchUsageData} from './utils/usage.js';
 import Spinner from 'ink-spinner';
+
+const REFRESH_INTERVAL = 60_000; // 60 seconds
 
 export default function App() {
   const {exit} = useApp();
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+
+  const refresh = useCallback(async () => {
+    try {
+      const data = await fetchUsageData();
+      setUsage(data);
+      setError(null);
+      setLastRefresh(new Date());
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useInput((input, key) => {
     if (input === 'q' || key.escape) {
@@ -16,19 +32,15 @@ export default function App() {
     }
     if (input === 'r') {
       setLoading(true);
-      fetchUsageData()
-        .then(setUsage)
-        .catch(e => setError(e.message))
-        .finally(() => setLoading(false));
+      refresh();
     }
   });
 
   useEffect(() => {
-    fetchUsageData()
-      .then(setUsage)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
+    refresh();
+    const interval = setInterval(refresh, REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  }, [refresh]);
 
   if (loading) {
     return (
@@ -69,14 +81,14 @@ export default function App() {
       <BatteryBar
         label="Session"
         percentUsed={usage.session.percentUsed}
-        resetInfo={usage.session.resetInfo}
+        resetAt={usage.session.resetAt}
       />
 
       <Box marginTop={1}>
         <BatteryBar
           label="Weekly"
           percentUsed={usage.weekly.percentUsed}
-          resetInfo={usage.weekly.resetInfo}
+          resetAt={usage.weekly.resetAt}
         />
       </Box>
 
@@ -85,13 +97,16 @@ export default function App() {
           <BatteryBar
             label="Sonnet"
             percentUsed={usage.weeklySonnet.percentUsed}
-            resetInfo={usage.weeklySonnet.resetInfo}
+            resetAt={usage.weeklySonnet.resetAt}
           />
         </Box>
       )}
 
       <Box marginTop={1}>
-        <Text dimColor>Press 'r' to refresh, 'q' to quit</Text>
+        <Text dimColor>
+          {lastRefresh && `Updated ${lastRefresh.toLocaleTimeString()} · `}
+          Auto-refresh 60s · 'r' refresh · 'q' quit
+        </Text>
       </Box>
     </Box>
   );

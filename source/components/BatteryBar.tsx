@@ -3,7 +3,7 @@ import {Box, Text} from 'ink';
 type Props = {
   label: string;
   percentUsed: number;
-  resetInfo?: string;
+  resetAt?: string;
   width?: number;
 };
 
@@ -19,10 +19,27 @@ function getBatteryIcon(percentRemaining: number): string {
   return '🔋';
 }
 
+function getRelativeTime(isoString: string | undefined): string | null {
+  if (!isoString) return null;
+  const resetDate = new Date(isoString);
+  const now = new Date();
+  const diffMs = resetDate.getTime() - now.getTime();
+
+  if (diffMs <= 0) return 'now';
+
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 60) return `in ${diffMins} minute${diffMins !== 1 ? 's' : ''}`;
+  if (diffHours < 24) return `in ${diffHours} hour${diffHours !== 1 ? 's' : ''}`;
+  return `in ${diffDays} day${diffDays !== 1 ? 's' : ''}`;
+}
+
 export default function BatteryBar({
   label,
   percentUsed,
-  resetInfo,
+  resetAt,
   width = 30,
 }: Props) {
   const percentRemaining = Math.max(0, Math.min(100, 100 - percentUsed));
@@ -49,9 +66,9 @@ export default function BatteryBar({
         </Text>
         <Text dimColor> remaining</Text>
       </Box>
-      {resetInfo && (
+      {resetAt && getRelativeTime(resetAt) && (
         <Box marginLeft={11}>
-          <Text dimColor>Resets {resetInfo}</Text>
+          <Text dimColor>Resets {getRelativeTime(resetAt)}</Text>
         </Box>
       )}
     </Box>

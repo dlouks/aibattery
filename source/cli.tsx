@@ -33,6 +33,23 @@ const cli = meow(
   },
 );
 
+function getRelativeTime(isoString: string | undefined): string {
+  if (!isoString) return '';
+  const resetDate = new Date(isoString);
+  const now = new Date();
+  const diffMs = resetDate.getTime() - now.getTime();
+
+  if (diffMs <= 0) return 'now';
+
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 60) return `in ${diffMins} minute${diffMins !== 1 ? 's' : ''}`;
+  if (diffHours < 24) return `in ${diffHours} hour${diffHours !== 1 ? 's' : ''}`;
+  return `in ${diffDays} day${diffDays !== 1 ? 's' : ''}`;
+}
+
 async function simpleOutput() {
   const usage = await fetchUsageData();
 
@@ -52,14 +69,14 @@ async function simpleOutput() {
 
   console.log('\n⚡ Claude Battery\n');
   console.log(`Session  ${getBatteryChar(sessionRemaining)} ${getBar(sessionRemaining)} ${sessionRemaining}% remaining`);
-  console.log(`         Resets ${usage.session.resetInfo}\n`);
+  console.log(`         Resets ${getRelativeTime(usage.session.resetAt)}\n`);
   console.log(`Weekly   ${getBatteryChar(weeklyRemaining)} ${getBar(weeklyRemaining)} ${weeklyRemaining}% remaining`);
-  console.log(`         Resets ${usage.weekly.resetInfo}\n`);
+  console.log(`         Resets ${getRelativeTime(usage.weekly.resetAt)}\n`);
 
   if (usage.weeklySonnet) {
     const sonnetRemaining = 100 - usage.weeklySonnet.percentUsed;
     console.log(`Sonnet   ${getBatteryChar(sonnetRemaining)} ${getBar(sonnetRemaining)} ${sonnetRemaining}% remaining`);
-    console.log(`         Resets ${usage.weeklySonnet.resetInfo}\n`);
+    console.log(`         Resets ${getRelativeTime(usage.weeklySonnet.resetAt)}\n`);
   }
 }
 
@@ -74,10 +91,13 @@ async function jsonOutput() {
   }, null, 2));
 }
 
-if (cli.flags.simple) {
-  simpleOutput();
-} else if (cli.flags.json) {
+const isTTY = process.stdin.isTTY && process.stdout.isTTY;
+
+if (cli.flags.json) {
   jsonOutput();
+} else if (cli.flags.simple || !isTTY) {
+  // Use simple output if requested or if not in interactive terminal
+  simpleOutput();
 } else {
   const {waitUntilExit} = render(<App />);
   waitUntilExit();
