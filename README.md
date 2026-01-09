@@ -2,6 +2,8 @@
 
 A macOS menu bar app and CLI tool that shows your Claude API usage like a battery indicator.
 
+![Menu Bar](docs/menubar.png)
+
 ## Quick Install
 
 ```bash
