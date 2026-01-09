@@ -9,6 +9,7 @@ import json
 import math
 import os
 import subprocess
+import sys
 import tempfile
 from datetime import datetime
 
@@ -119,7 +120,7 @@ class ClaudeBatteryApp(rumps.App):
         try:
             # First try to fetch fresh data from claude /usage
             result = subprocess.run(
-                ['python3', 'fetch-usage.py'],
+                [sys.executable, 'fetch-usage.py'],
                 capture_output=True,
                 text=True,
                 cwd=APP_DIR,

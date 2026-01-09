@@ -25,9 +25,11 @@ fi
 
 cd "$INSTALL_DIR"
 
-# Install Python dependencies
-echo "🐍 Installing Python dependencies..."
-pip3 install --user rumps pillow pexpect >/dev/null 2>&1 || pip3 install rumps pillow pexpect
+# Create Python virtual environment
+echo "🐍 Setting up Python environment..."
+python3 -m venv "$INSTALL_DIR/venv"
+"$INSTALL_DIR/venv/bin/pip" install --upgrade pip >/dev/null 2>&1
+"$INSTALL_DIR/venv/bin/pip" install rumps pillow pexpect >/dev/null 2>&1
 
 # Install Node dependencies and build CLI
 echo "📦 Installing Node dependencies..."
@@ -41,7 +43,7 @@ npm link >/dev/null 2>&1 || true
 # Generate icons if not present
 if [ ! -f "$INSTALL_DIR/icons/battery_50.png" ]; then
     echo "🎨 Generating icons..."
-    python3 generate_icons.py >/dev/null 2>&1
+    "$INSTALL_DIR/venv/bin/python" generate_icons.py >/dev/null 2>&1
 fi
 
 # Setup LaunchAgent for auto-start
@@ -57,13 +59,13 @@ pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
 # Fetch initial usage data (before starting tray app)
 echo "📊 Fetching initial usage data..."
-python3 "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
+"$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
 # Start the service
 launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
 
 # Also start the tray app directly (launchctl can be slow)
-python3 "$INSTALL_DIR/tray.py" &
+"$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/tray.py" &
 
 echo ""
 echo "✅ AI Battery installed!"
