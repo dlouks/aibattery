@@ -57,7 +57,8 @@ sed "s|INSTALL_PATH|$INSTALL_DIR|g" "$INSTALL_DIR/com.aibattery.plist" > "$LAUNC
 
 # Stop existing instance if running
 launchctl unload "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
-pkill -f "aibattery.*tray.py" 2>/dev/null || true
+pkill -f "tray.py" 2>/dev/null || true
+sleep 1
 
 # Make app executable (git may not preserve permissions)
 chmod +x "$INSTALL_DIR/AIBattery.app/Contents/MacOS/AIBattery"
