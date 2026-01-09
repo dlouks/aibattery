@@ -16,7 +16,7 @@ const cli = meow(
     --version, -v  Show version
 
   Description
-    Battery-style indicator for Claude API usage.
+    Battery-style indicator for AI API usage.
     Shows remaining capacity with color-coded alerts:
       Green  = >20% remaining
       Yellow = ≤20% remaining
@@ -67,7 +67,7 @@ async function simpleOutput() {
   const sessionRemaining = 100 - usage.session.percentUsed;
   const weeklyRemaining = 100 - usage.weekly.percentUsed;
 
-  console.log('\n⚡ Claude Battery\n');
+  console.log('\n⚡ AI Battery\n');
   console.log(`Session  ${getBatteryChar(sessionRemaining)} ${getBar(sessionRemaining)} ${sessionRemaining}% remaining`);
   console.log(`         Resets ${getRelativeTime(usage.session.resetAt)}\n`);
   console.log(`Weekly   ${getBatteryChar(weeklyRemaining)} ${getBar(weeklyRemaining)} ${weeklyRemaining}% remaining`);

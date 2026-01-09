@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate gauge arc icons with dot marker for Claude Battery"""
+"""Generate gauge arc icons with dot marker for AI Battery"""
 
 from PIL import Image, ImageDraw
 import math

@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-# Claude Battery Installer
+# AI Battery Installer
 # Usage: curl -fsSL https://raw.githubusercontent.com/dlouks/aibattery/master/install.sh | bash
 
 INSTALL_DIR="$HOME/.aibattery"
 PLIST_NAME="com.aibattery.plist"
 LAUNCHAGENTS_DIR="$HOME/Library/LaunchAgents"
 
-echo "🔋 Installing Claude Battery..."
+echo "🔋 Installing AI Battery..."
 
 # Create install directory
 mkdir -p "$INSTALL_DIR"
@@ -62,7 +62,7 @@ launchctl load "$LAUNCHAGENTS_DIR/$PLIST_NAME"
 python3 "$INSTALL_DIR/tray.py" &
 
 echo ""
-echo "✅ Claude Battery installed!"
+echo "✅ AI Battery installed!"
 echo ""
 echo "   Menu bar icon should appear now."
 echo "   It will auto-start on login."

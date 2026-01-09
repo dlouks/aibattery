@@ -74,7 +74,7 @@ export default function App() {
     <Box flexDirection="column" paddingX={1}>
       <Box marginBottom={1}>
         <Text bold color="cyan">
-          ⚡ Claude Battery
+          ⚡ AI Battery
         </Text>
       </Box>
 
