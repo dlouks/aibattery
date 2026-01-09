@@ -16,7 +16,8 @@ from PIL import Image, ImageDraw
 
 import rumps
 
-ICON_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'icons')
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+ICON_DIR = os.path.join(APP_DIR, 'icons')
 REFRESH_INTERVAL = 600  # 10 minutes
 ICON_SIZE = 22
 
@@ -121,11 +122,11 @@ class ClaudeBatteryApp(rumps.App):
                 ['python3', 'fetch-usage.py'],
                 capture_output=True,
                 text=True,
-                cwd='/Users/dlouks/personal/aibattery',
+                cwd=APP_DIR,
                 timeout=60
             )
             # Whether fetch succeeded or not, read from the JSON file
-            usage_file = '/Users/dlouks/personal/aibattery/usage-data.json'
+            usage_file = os.path.join(APP_DIR, 'usage-data.json')
             with open(usage_file, 'r') as f:
                 data = json.load(f)
 
