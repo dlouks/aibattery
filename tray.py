@@ -74,14 +74,16 @@ def get_relative_time(iso_string):
         if diff.total_seconds() <= 0:
             return "now"
 
-        diff_mins = int(diff.total_seconds() / 60)
-        diff_hours = int(diff.total_seconds() / 3600)
+        total_mins = int(diff.total_seconds() / 60)
+        total_hours = int(diff.total_seconds() / 3600)
         diff_days = int(diff.total_seconds() / 86400)
 
-        if diff_mins < 60:
-            return f"in {diff_mins} minute{'s' if diff_mins != 1 else ''}"
-        if diff_hours < 24:
-            return f"in {diff_hours} hour{'s' if diff_hours != 1 else ''}"
+        if total_mins < 60:
+            return f"in {total_mins} minute{'s' if total_mins != 1 else ''}"
+        if total_hours < 24:
+            hours = total_hours
+            mins = total_mins % 60
+            return f"in {hours}h {mins}m"
         return f"in {diff_days} day{'s' if diff_days != 1 else ''}"
     except:
         return None
@@ -96,7 +98,8 @@ class ClaudeBatteryApp(rumps.App):
         self.timer = rumps.Timer(self.refresh_usage, REFRESH_INTERVAL)
         self.timer.start()
 
-    def noop(self, _=None):
+    @staticmethod
+    def noop(_=None):
         """No-op callback - makes items appear white instead of grey"""
         pass
 
@@ -176,13 +179,12 @@ class ClaudeBatteryApp(rumps.App):
         session_icon = self.get_status_icon(session)
         session_bar = self.get_battery_visual(session)
         self.menu.add(rumps.MenuItem(
-            f"{session_icon}  Session  {session_bar}  {session}% left", callback=None))
+            f"{session_icon}  Session  {session_bar}  {session}% left",
+            callback=None))
         reset_time = get_relative_time(self.usage['session'].get('resetAt'))
         if reset_time:
             self.menu.add(rumps.MenuItem(
-                f"      Resets {reset_time}",
-                callback=None
-            ))
+                f"      Resets {reset_time}", callback=None))
 
         self.menu.add(rumps.separator)
 
@@ -190,13 +192,12 @@ class ClaudeBatteryApp(rumps.App):
         weekly_icon = self.get_status_icon(weekly)
         weekly_bar = self.get_battery_visual(weekly)
         self.menu.add(rumps.MenuItem(
-            f"{weekly_icon}  Weekly  {weekly_bar}  {weekly}% left", callback=None))
+            f"{weekly_icon}  Weekly  {weekly_bar}  {weekly}% left",
+            callback=None))
         reset_time = get_relative_time(self.usage['weekly'].get('resetAt'))
         if reset_time:
             self.menu.add(rumps.MenuItem(
-                f"      Resets {reset_time}",
-                callback=None
-            ))
+                f"      Resets {reset_time}", callback=None))
 
         # Sonnet (if available)
         if self.usage.get('weeklySonnet'):
@@ -206,13 +207,12 @@ class ClaudeBatteryApp(rumps.App):
 
             self.menu.add(rumps.separator)
             self.menu.add(rumps.MenuItem(
-                f"{sonnet_icon}  Sonnet  {sonnet_bar}  {sonnet}% left", callback=None))
+                f"{sonnet_icon}  Sonnet  {sonnet_bar}  {sonnet}% left",
+                callback=None))
             reset_time = get_relative_time(self.usage['weeklySonnet'].get('resetAt'))
             if reset_time:
                 self.menu.add(rumps.MenuItem(
-                    f"      Resets {reset_time}",
-                    callback=None
-                ))
+                    f"      Resets {reset_time}", callback=None))
 
         self.menu.add(rumps.separator)
         self.menu.add(rumps.MenuItem("Refresh", callback=self.refresh_usage))
