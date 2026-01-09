@@ -29,7 +29,7 @@ cd "$INSTALL_DIR"
 echo "🐍 Setting up Python environment..."
 python3 -m venv "$INSTALL_DIR/venv"
 "$INSTALL_DIR/venv/bin/pip" install --upgrade pip >/dev/null 2>&1
-"$INSTALL_DIR/venv/bin/pip" install rumps pillow pexpect >/dev/null 2>&1
+"$INSTALL_DIR/venv/bin/pip" install rumps pillow >/dev/null 2>&1
 
 # Install Node dependencies and build CLI
 echo "📦 Installing Node dependencies..."
@@ -58,15 +58,7 @@ sed "s|INSTALL_PATH|$INSTALL_DIR|g" "$INSTALL_DIR/com.aibattery.plist" > "$LAUNC
 launchctl unload "$LAUNCHAGENTS_DIR/$PLIST_NAME" 2>/dev/null || true
 pkill -f "aibattery.*tray.py" 2>/dev/null || true
 
-# First-time setup: run claude /usage interactively to establish trust
-echo ""
-echo "📊 First-time setup: You may need to accept a trust prompt..."
-echo "   Press Enter when prompted, then Esc to close the usage screen."
-echo ""
-cd "$HOME" && claude /usage || true
-echo ""
-
-# Now fetch the data via script
+# Fetch initial usage data
 "$INSTALL_DIR/venv/bin/python" "$INSTALL_DIR/fetch-usage.py" >/dev/null 2>&1 || true
 
 # Start the service

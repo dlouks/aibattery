@@ -54,7 +54,7 @@ cd ~/.aibattery
 
 # Create Python venv and install dependencies
 python3 -m venv venv
-venv/bin/pip install rumps pillow pexpect
+venv/bin/pip install rumps pillow
 
 # Install Node dependencies and build CLI
 npm install
@@ -88,7 +88,7 @@ rm -rf ~/.aibattery
 
 ## How It Works
 
-The app runs `claude /usage` periodically to fetch your current usage data from Anthropic. This is a metadata query - it doesn't consume any Claude tokens.
+The app fetches usage data directly from the Anthropic API using the OAuth credentials stored by Claude Code in your macOS Keychain. This is a lightweight metadata query that doesn't consume any Claude tokens.
 
 Usage data is cached locally in `usage-data.json` and displayed in both the menu bar icon and dropdown menu.
 
